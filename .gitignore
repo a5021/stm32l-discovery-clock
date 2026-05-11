@@ -1,0 +1,9 @@
+*.o
+*.elf
+*.bin
+*.ok
+*.bak
+*.bad
+*.last
+src/
+sync_time.py
