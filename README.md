@@ -1,6 +1,7 @@
 # STM32L152RB Clock (MB963B Discovery Board)
 
 [![C/C++ CI](https://github.com/a5021/stm32l-discovery-clock/actions/workflows/build.yml/badge.svg)](https://github.com/a5021/stm32l-discovery-clock/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Firmware for a real-time clock using the onboard LCD and RTC of the
 STM32L152RB Discovery kit (MB963 B-0).
