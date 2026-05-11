@@ -13,8 +13,24 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Cache ARM GCC toolchain
+      id: cache-armgcc
+      uses: actions/cache@v4
+      with:
+        path: /opt/arm-gnu-toolchain
+        key: arm-gnu-toolchain-14.2.rel1
+
     - name: Install ARM GCC toolchain
-      run: sudo apt-get update -q && sudo apt-get install -y gcc-arm-none-eabi
+      if: steps.cache-armgcc.outputs.cache-hit != 'true'
+      run: |
+        wget -qO /tmp/arm-gnu-toolchain.tar.xz \
+          https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz
+        sudo mkdir -p /opt/arm-gnu-toolchain
+        sudo tar xf /tmp/arm-gnu-toolchain.tar.xz -C /opt/arm-gnu-toolchain --strip-components=1
+        rm /tmp/arm-gnu-toolchain.tar.xz
+
+    - name: Add toolchain to PATH
+      run: echo "/opt/arm-gnu-toolchain/bin" >> $GITHUB_PATH
 
     - name: Build
       run: make
