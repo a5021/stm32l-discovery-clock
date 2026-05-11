@@ -79,12 +79,13 @@ def main() -> None:
         print(f"failed: {e}")
         sys.exit(1)
 
-    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
-    secs = seconds_since_midnight(dt)
+    utc = datetime.fromtimestamp(ts, tz=timezone.utc)
+    local = datetime.fromtimestamp(ts)           # local timezone (includes UTC offset)
+    secs = seconds_since_midnight(local)
     hex_val = f"0x{secs:08X}"
 
     print(f"OK")
-    print(f"UTC time:  {dt.hour:02d}:{dt.minute:02d}:{dt.second:02d} ({secs} sec)")
+    print(f"Local time: {local.hour:02d}:{local.minute:02d}:{local.second:02d} ({secs} sec)")
     print(f"Writing {hex_val} to {RAM_ADDRESS} ...", end=" ", flush=True)
 
     write_ram(RAM_ADDRESS, hex_val)
