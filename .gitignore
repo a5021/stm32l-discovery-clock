@@ -6,4 +6,3 @@
 *.bad
 *.last
 src/
-sync_time.py
