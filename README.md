@@ -38,7 +38,8 @@ STM32L152RB Discovery kit (MB963 B-0).
 ├── startup_stm32l152xb.s    # CMSIS startup (reset vector, exceptions)
 ├── stm32l152xb.ld           # Linker script
 ├── Makefile                 # Build & flash
-├── sync_time.py             # PC sync script (ST-Link mailbox)
+├── sync_time.py             # PC sync script (local clock, ST-Link mailbox)
+├── ntp_time.py              # PC sync script (NTP, ST-Link mailbox)
 ├── inc/
 │   ├── stm32l152xb.h        # MCU register definitions
 │   ├── stm32l1xx.h          # STM32L1xx header
@@ -73,13 +74,13 @@ make clean    # Remove build artifacts
 4. After the last field (seconds) the RTC is updated and the clock
    resumes normal operation
 
-### Option B – PC sync (more precise)
+### Option B – PC sync (local clock)
 
 The firmware reserves `0x20000000` as a mailbox. When the value differs
 from `0xFFFFFFFF` the firmware interprets it as seconds since midnight
 and updates the RTC.
 
-The `sync_time.py` script automates this:
+The `sync_time.py` script automates this using the host's local clock:
 
 ```sh
 python sync_time.py
@@ -90,6 +91,22 @@ the mailbox via `ST-LINK_CLI.exe`.
 
 **Note:** Adjust `cli_path` in the script if `ST-LINK_CLI.exe` is not in
 your `PATH`.
+
+### Option C – NTP sync (network time)
+
+For better accuracy or if the host clock is unreliable, `ntp_time.py`
+fetches UTC time from an NTP server:
+
+```sh
+python ntp_time.py
+```
+
+By default it queries `pool.ntp.org`. A different server can be
+specified with `--server`:
+
+```sh
+python ntp_time.py --server time.google.com
+```
 
 ## Technical details
 
