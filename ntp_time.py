@@ -52,15 +52,17 @@ def seconds_since_midnight(dt: datetime) -> int:
 
 
 def write_ram(addr: str, value: str) -> None:
-    """Write *value* to *addr* via ST-LINK_CLI.exe."""
+    """Write *value* to *addr* via ST-LINK_CLI.exe.
+
+    ST-LINK_CLI may print warnings and return a non-zero exit code
+    even when the write succeeds. Both stdout and stderr are
+    discarded, and the exit code is ignored.
+    """
     cmd = [STLINK_CLI, "-c", "SWD", "HOTPLUG", "-w32", addr, value]
     try:
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except FileNotFoundError:
         print(f"Error: '{STLINK_CLI}' not found. Install ST-Link tools or adjust the path.")
-        sys.exit(1)
-    except subprocess.CalledProcessError as e:
-        print(f"Error: ST-LINK_CLI failed with code {e.returncode}")
         sys.exit(1)
 
 
